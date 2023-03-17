@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import Card from "./components/Card";
 
 function App() {
   const cardValues = [
@@ -96,13 +97,35 @@ function App() {
     console.log(playerCards);
   }, [playerCards]);
 
+  const playerCardsDisplayFunction = () => {
+    const playerCardsDisplayArray = [];
+    for (let i = 0; i < playerCards.length; i++) {
+      playerCardsDisplayArray.push(
+        <Card key={i} value={playerCards[i][0]} suit={playerCards[i][1]} />
+      );
+    }
+
+    return (
+      <span className="mx-auto max-w-[600px] flex">
+        {playerCardsDisplayArray}
+      </span>
+    );
+  };
+
   return (
     <div className="App">
       <div>
-        <button onClick={onClickPlayerDraw}>Draw Card</button>
-        {playerCards}
+        <button
+          onClick={onClickPlayerDraw}
+          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+        >
+          Draw
+        </button>
       </div>
-      <span>{playerTotalNum}</span>
+      <div className="bg-white m-4 font-semibold text-2xl w-[40px] text-center rounded-xl">
+        {playerTotalNum}
+      </div>
+      <div>{playerCardsDisplayFunction()}</div>
     </div>
   );
 }
