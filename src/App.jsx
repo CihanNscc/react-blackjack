@@ -42,13 +42,9 @@ function App() {
           tempNum = 11;
           break;
         case "Jack":
-          tempNum = 11;
-          break;
         case "Queen":
-          tempNum = 12;
-          break;
         case "King":
-          tempNum = 13;
+          tempNum = 10;
           break;
         default:
           tempNum = item[0];
@@ -65,13 +61,9 @@ function App() {
             tempNum = 1;
             break;
           case "Jack":
-            tempNum = 11;
-            break;
           case "Queen":
-            tempNum = 12;
-            break;
           case "King":
-            tempNum = 13;
+            tempNum = 10;
             break;
           default:
             tempNum = item[0];
