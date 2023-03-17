@@ -21,6 +21,10 @@ function App() {
 
   const cardSuits = ["Diamond", "Club", "Heart", "Spade"];
 
+  const playerDisplayArray = [];
+
+  const houseDisplayArray = [];
+
   const getRandomCard = function () {
     let randomValue = cardValues[Math.floor(Math.random() * 13)];
     let randomSuit = cardSuits[Math.floor(Math.random() * 4)];
@@ -30,13 +34,17 @@ function App() {
 
   const [playerCards, setPlayerCards] = useState([]);
 
+  const [houseCards, setHouseCards] = useState([]);
+
   const [playerTotalNum, setPlayerTotalNum] = useState(0);
 
-  const calculateTotal = () => {
+  const [houseTotalNum, setHouseTotalNum] = useState(0);
+
+  const calculateTotal = (array) => {
     let tempNum = 0;
     let totalNum = 0;
 
-    playerCards.forEach((item) => {
+    array.forEach((item) => {
       switch (item[0]) {
         case "Ace":
           tempNum = 11;
@@ -55,7 +63,7 @@ function App() {
     if (totalNum > 21) {
       tempNum = 0;
       totalNum = 0;
-      playerCards.forEach((item) => {
+      array.forEach((item) => {
         switch (item[0]) {
           case "Ace":
             tempNum = 1;
@@ -71,37 +79,46 @@ function App() {
         totalNum += tempNum;
       });
     }
-
-    if (totalNum > 21) {
-      setPlayerCards([]);
-      totalNum = 0;
-    }
-
     return totalNum;
   };
 
   const onClickPlayerDraw = () => {
     setPlayerCards([...playerCards, getRandomCard()]);
+    if (playerTotalNum <= 21) {
+      setHouseCards([...houseCards, getRandomCard()]);
+    }
+  };
+
+  const cleanTable = () => {
+    setPlayerCards([]);
+    setHouseCards([]);
+    setPlayerTotalNum(0);
+    setHouseTotalNum(0);
   };
 
   useEffect(() => {
-    setPlayerTotalNum(calculateTotal());
-    console.log(playerCards);
-  }, [playerCards]);
+    setHouseTotalNum(calculateTotal(houseCards));
+    setPlayerTotalNum(calculateTotal(playerCards));
+  }, [houseCards, playerCards]);
 
-  const playerCardsDisplayFunction = () => {
-    const playerCardsDisplayArray = [];
-    for (let i = 0; i < playerCards.length; i++) {
-      playerCardsDisplayArray.push(
-        <Card key={i} value={playerCards[i][0]} suit={playerCards[i][1]} />
+  useEffect(() => {
+    if (houseTotalNum > 21 && playerTotalNum <= 21) {
+      console.log("House lost!");
+    }
+
+    if (playerTotalNum > 21) {
+      console.log("Player lost!");
+    }
+  }, [houseTotalNum, playerTotalNum]);
+
+  const cardsDisplay = (sourceArray, displayArray) => {
+    for (let i = 0; i < sourceArray.length; i++) {
+      displayArray.push(
+        <Card key={i} value={sourceArray[i][0]} suit={sourceArray[i][1]} />
       );
     }
 
-    return (
-      <span className="mx-auto max-w-[600px] flex">
-        {playerCardsDisplayArray}
-      </span>
-    );
+    return <span className="mx-auto max-w-[600px] flex">{displayArray}</span>;
   };
 
   return (
@@ -113,11 +130,21 @@ function App() {
         >
           Draw
         </button>
+        <button
+          onClick={cleanTable}
+          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+        >
+          Clean
+        </button>
       </div>
-      <div className="bg-white m-4 font-semibold text-2xl w-[40px] text-center rounded-xl">
-        {playerTotalNum}
+      <div className="bg-white m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
+        h: {houseTotalNum}
       </div>
-      <div>{playerCardsDisplayFunction()}</div>
+      <div className="bg-white m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
+        p: {playerTotalNum}
+      </div>
+      <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
+      <div>{cardsDisplay(playerCards, playerDisplayArray)}</div>
     </div>
   );
 }

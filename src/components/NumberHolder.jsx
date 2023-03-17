@@ -1,11 +1,7 @@
-const NumberHolder = (props) => {
-  const [playerNumber, setPlayerNumber] = useState(0);
+import React from "react";
 
-  const handlePlayerNumber = (tempNumber) => {
-    setPlayerNumber = playerNumber + tempNumber;
-  };
-
-  return <div>{playerNumber}</div>;
+const NumberHolder = () => {
+  return <div>NumberHolder</div>;
 };
 
 export default NumberHolder;
