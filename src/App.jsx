@@ -118,25 +118,15 @@ function App() {
       );
     }
 
-    return <span className="mx-auto max-w-[600px] flex">{displayArray}</span>;
+    return (
+      <span className="flex justify-left min-h-[180px] max-w-[500px] overflow-auto pl-4 pb-6 pr-[60px] m-4">
+        {displayArray}
+      </span>
+    );
   };
 
   return (
     <div className="App">
-      <div>
-        <button
-          onClick={onClickPlayerDraw}
-          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-        >
-          Draw
-        </button>
-        <button
-          onClick={cleanTable}
-          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-        >
-          Clean
-        </button>
-      </div>
       <div className="bg-white m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
         h: {houseTotalNum}
       </div>
@@ -144,6 +134,24 @@ function App() {
         p: {playerTotalNum}
       </div>
       <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
+      <div className="max-w-[800px] mx-auto flex flex-wrap justify-between">
+        <button
+          onClick={onClickPlayerDraw}
+          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+        >
+          Draw
+        </button>
+        <button className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
+          x2
+        </button>
+        <div>POT</div>
+        <button
+          onClick={cleanTable}
+          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+        >
+          Clean
+        </button>
+      </div>
       <div>{cardsDisplay(playerCards, playerDisplayArray)}</div>
     </div>
   );

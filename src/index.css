@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 html {
-  background-image: linear-gradient(40deg, #0C7034, #127A3C);
+  background-image: url('/src/assets/tabletexture.png'),linear-gradient(40deg, #0C7034, #127A3C);
+  background-repeat: repeat;
 }
