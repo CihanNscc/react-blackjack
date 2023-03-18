@@ -25,6 +25,8 @@ function App() {
 
   const houseDisplayArray = [];
 
+  let houseDraw = true;
+
   const getRandomCard = function () {
     let randomValue = cardValues[Math.floor(Math.random() * 13)];
     let randomSuit = cardSuits[Math.floor(Math.random() * 4)];
@@ -82,18 +84,47 @@ function App() {
     return totalNum;
   };
 
-  const onClickPlayerDraw = () => {
+  const onDraw = () => {
     setPlayerCards([...playerCards, getRandomCard()]);
-    if (playerTotalNum <= 21) {
-      setHouseCards([...houseCards, getRandomCard()]);
+  };
+
+  const houseDrawAction = () => {
+    setHouseCards([...houseCards, getRandomCard()]);
+  };
+
+  const onStand = () => {
+    if (houseDraw) {
+      houseDrawAction();
+      onStand();
+    } else {
+      checkTheWinner();
     }
   };
 
-  const cleanTable = () => {
-    setPlayerCards([]);
-    setHouseCards([]);
+  const setTable = () => {
     setPlayerTotalNum(0);
     setHouseTotalNum(0);
+    setPlayerCards([getRandomCard(), getRandomCard()]);
+    setHouseCards([getRandomCard(), getRandomCard()]);
+  };
+
+  const checkTheWinner = () => {
+    if (playerTotalNum > houseTotalNum) {
+      console.log("Player wins!");
+      setTimeout(() => {
+        setTable();
+      }, 2000);
+    } else if (playerTotalNum < houseTotalNum) {
+      console.log("House wins!");
+      setTimeout(() => {
+        setTable();
+      }, 2000);
+    } else if (playerTotalNum === houseTotalNum) {
+      console.log("House wins!");
+      setTimeout(() => {
+        setTable();
+      }, 2000);
+    }
   };
 
   useEffect(() => {
@@ -102,12 +133,40 @@ function App() {
   }, [houseCards, playerCards]);
 
   useEffect(() => {
+    if (playerTotalNum <= 21 && playerTotalNum > houseTotalNum) {
+      houseDraw = true;
+    } else {
+      houseDraw = false;
+    }
+
     if (houseTotalNum > 21 && playerTotalNum <= 21) {
-      console.log("House lost!");
+      console.log("House bust!");
+      houseDraw = false;
+      setTimeout(() => {
+        setTable();
+      }, 2000);
     }
 
     if (playerTotalNum > 21) {
-      console.log("Player lost!");
+      console.log("Player bust!");
+      setTimeout(() => {
+        setTable();
+      }, 2000);
+    }
+
+    if (houseTotalNum === 21) {
+      console.log("House blackjack!");
+      houseDraw = false;
+      setTimeout(() => {
+        setTable();
+      }, 2000);
+    }
+
+    if (playerTotalNum === 21) {
+      console.log("Player blackjack!");
+      setTimeout(() => {
+        setTable();
+      }, 2000);
     }
   }, [houseTotalNum, playerTotalNum]);
 
@@ -136,17 +195,23 @@ function App() {
       <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
       <div className="max-w-[800px] mx-auto flex flex-wrap justify-between">
         <button
-          onClick={onClickPlayerDraw}
+          onClick={onDraw}
           className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
         >
-          Draw
+          Hit
+        </button>
+        <button
+          onClick={onStand}
+          className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+        >
+          Stand
         </button>
         <button className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
           x2
         </button>
         <div>POT</div>
         <button
-          onClick={cleanTable}
+          onClick={setTable}
           className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
         >
           Clean
