@@ -6,3 +6,9 @@ html {
   background-image: url('/src/assets/tabletexture.png'),linear-gradient(40deg, #0C7034, #127A3C);
   background-repeat: repeat;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%; 
+}

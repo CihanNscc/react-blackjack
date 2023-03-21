@@ -32,6 +32,23 @@ function App() {
     return newCard;
   };
 
+  const minBet = 100;
+  const smBet = 100;
+  const mdBet = 200;
+  const lgBet = 500;
+  const starterMoney = 2000;
+  const targetMoney = 20000;
+
+  const [gameIsOn, setGameIsOn] = useState(false);
+
+  const [gameMessage, setgameMessage] = useState("");
+
+  const [winLoseMessage, setWinLoseMessage] = useState("");
+
+  const [playerMoney, setPlayerMoney] = useState(starterMoney);
+
+  const [pot, setPot] = useState(0);
+
   const [playerCards, setPlayerCards] = useState([]);
 
   const [houseCards, setHouseCards] = useState([]);
@@ -72,48 +89,183 @@ function App() {
     return totalNum;
   };
 
+  const makeBet = (amount) => {
+    let tempPot = pot;
+    let tempPlayerMoney = playerMoney;
+    setPot(tempPot + amount);
+    setPlayerMoney(tempPlayerMoney - amount);
+  };
+
+  const roundWin = (message) => {
+    let tempPot = pot;
+    let tempPlayerMoney = playerMoney;
+    setRoundEnd(true);
+    setWinLoseMessage(message);
+    setPlayerMoney((tempPlayerMoney += tempPot * 2));
+    setPot(0);
+    if (playerMoney > targetMoney) {
+      setgameMessage("Congratulations! You won.");
+      setGameIsOn(false);
+    }
+  };
+
+  const roundLose = (message) => {
+    setRoundEnd(true);
+    setWinLoseMessage(message);
+    setPot(0);
+    if (playerMoney < minBet) {
+      setgameMessage("Sorry! You lost.");
+      setGameIsOn(false);
+    }
+  };
+
+  const roundDraw = (message) => {
+    let tempPot = pot;
+    let tempPlayerMoney = playerMoney;
+    setRoundEnd(true);
+    setWinLoseMessage(message);
+    setPlayerMoney((tempPlayerMoney += tempPot));
+    setPot(0);
+  };
+
   const onDraw = () => {
-    setPlayerCards([...playerCards, getRandomCard()]);
+    let tempPlayerNum = playerTotalNum;
+    let tempPlayerArray = [...playerCards];
+    tempPlayerArray = [...tempPlayerArray, getRandomCard()];
+    setPlayerCards([...tempPlayerArray]);
+    tempPlayerNum = calculateTotal(tempPlayerArray);
+    setPlayerTotalNum(tempPlayerNum);
+
+    if (tempPlayerNum === 21) {
+      roundWin("Player blackjack!");
+    } else if (tempPlayerNum > 21) {
+      roundLose("Player busted!");
+    }
   };
 
   const onStand = () => {
     let tempHouseNum = houseTotalNum;
     let tempPlayerNum = playerTotalNum;
-    let tempArray = [...houseCards];
+    setPlayerTotalNum(tempPlayerNum);
+    let tempHouseArray = [...houseCards];
+    tempHouseNum = calculateTotal(tempHouseArray);
 
     setRoundEnd(true);
 
-    if (tempPlayerNum > tempHouseNum) {
-      tempArray = [...tempArray, getRandomCard()];
-      setHouseCards([...tempArray]);
-      tempHouseNum = calculateTotal(tempArray);
-      console.log("player num:", tempPlayerNum);
-      console.log("house num:", tempHouseNum);
+    if (tempPlayerNum === 21) {
+      roundWin("Player blackjack!");
+    } else if (tempPlayerNum > 21) {
+      roundLose("Player busted!");
     }
 
     if (tempPlayerNum > tempHouseNum) {
-      tempArray = [...tempArray, getRandomCard()];
-      setHouseCards([...tempArray]);
-      tempHouseNum = calculateTotal(tempArray);
-      console.log("player num:", tempPlayerNum);
-      console.log("house num:", tempHouseNum);
+      tempHouseArray = [...tempHouseArray, getRandomCard()];
+      setHouseCards([...tempHouseArray]);
+      tempHouseNum = calculateTotal(tempHouseArray);
     }
 
-    if (tempPlayerNum < tempHouseNum && tempHouseNum < 21) {
-      console.log("House wins!");
+    if (tempPlayerNum > tempHouseNum) {
+      tempHouseArray = [...tempHouseArray, getRandomCard()];
+      setHouseCards([...tempHouseArray]);
+      tempHouseNum = calculateTotal(tempHouseArray);
+    }
+
+    if (tempHouseNum === 21) {
+      roundLose("House blackjack!");
+    } else if (tempHouseNum > 21) {
+      roundWin("House busted!");
+    } else if (tempPlayerNum < tempHouseNum) {
+      roundLose("House wins!");
     } else if (tempPlayerNum === tempHouseNum) {
-      console.log("Draw!");
+      roundDraw("Draw!");
     } else if (tempPlayerNum > tempHouseNum) {
-      console.log("Player wins!");
+      roundWin("Player wins!");
+    }
+  };
+
+  const onDouble = () => {
+    let tempPot = pot;
+    let tempPlayerMoney = playerMoney;
+    let tempPlayerArray = [...playerCards];
+    let tempHouseArray = [...houseCards];
+    let tempHouseNum = houseTotalNum;
+    let tempPlayerNum = playerTotalNum;
+
+    tempPlayerArray = [...tempPlayerArray, getRandomCard()];
+    setPlayerCards([...tempPlayerArray]);
+    tempPlayerNum = calculateTotal(tempPlayerArray);
+
+    tempPlayerMoney -= tempPot;
+    tempPot += tempPot;
+    setPot(tempPot);
+    setPlayerMoney(tempPlayerMoney);
+
+    setPlayerTotalNum(tempPlayerNum);
+    tempHouseNum = calculateTotal(tempHouseArray);
+
+    setRoundEnd(true);
+    if (tempPlayerNum === 21) {
+      roundWin("Player blackjack!");
+    } else if (tempPlayerNum > 21) {
+      roundLose("Player busted!");
+    } else {
+      if (tempPlayerNum > tempHouseNum) {
+        tempHouseArray = [...tempHouseArray, getRandomCard()];
+        setHouseCards([...tempHouseArray]);
+        tempHouseNum = calculateTotal(tempHouseArray);
+      }
+
+      if (tempPlayerNum > tempHouseNum) {
+        tempHouseArray = [...tempHouseArray, getRandomCard()];
+        setHouseCards([...tempHouseArray]);
+        tempHouseNum = calculateTotal(tempHouseArray);
+      }
+
+      if (tempHouseNum === 21) {
+        roundLose("House blackjack!");
+      } else if (tempHouseNum > 21) {
+        roundWin("House busted!");
+      } else if (tempPlayerNum < tempHouseNum) {
+        roundLose("House wins!");
+      } else if (tempPlayerNum === tempHouseNum) {
+        roundDraw("Draw!");
+      } else if (tempPlayerNum > tempHouseNum) {
+        roundWin("Player wins!");
+      }
     }
   };
 
   const setTable = () => {
+    let tempPlayerArray = [];
+    let tempHouseArray = [];
+    let tempHouseNum = houseTotalNum;
+    let tempPlayerNum = playerTotalNum;
     setRoundEnd(false);
+    makeBet(minBet);
     setPlayerTotalNum(0);
     setHouseTotalNum(0);
-    setPlayerCards([getRandomCard(), getRandomCard()]);
-    setHouseCards([getRandomCard(), getRandomCard()]);
+    tempHouseArray = [getRandomCard(), getRandomCard()];
+    setHouseCards([...tempHouseArray]);
+    tempHouseNum = calculateTotal(tempHouseArray);
+    tempPlayerArray = [getRandomCard(), getRandomCard()];
+    setPlayerCards([...tempPlayerArray]);
+    tempPlayerNum = calculateTotal(tempPlayerArray);
+
+    if (tempPlayerNum === 21) {
+      roundWin("Player blackjack!");
+    }
+  };
+
+  const restartGame = () => {
+    setPlayerTotalNum(0);
+    setHouseTotalNum(0);
+    setPlayerCards([]);
+    setHouseCards([]);
+    setPot(0);
+    setPlayerMoney(starterMoney);
+    setWinLoseMessage("");
+    setRoundEnd(true);
+    setGameIsOn(true);
   };
 
   const cardsDisplay = (sourceArray, displayArray) => {
@@ -124,7 +276,7 @@ function App() {
     }
 
     return (
-      <span className="flex justify-left min-h-[180px] max-w-[500px] overflow-auto pl-4 pb-6 pr-[60px] m-4">
+      <span className="flex justify-left min-h-[180px] max-w-[500px] overflow-auto pl-4 pb-6 pr-[60px] mb-4 mx-auto">
         {displayArray}
       </span>
     );
@@ -135,63 +287,116 @@ function App() {
     setHouseTotalNum(calculateTotal(houseCards));
   }, [playerCards, houseCards]);
 
-  useEffect(() => {
-    if (playerTotalNum === 21) {
-      console.log("Player blackjack!");
-      setRoundEnd(true);
-    } else if (playerTotalNum > 21) {
-      console.log("Player busted!");
-      setRoundEnd(true);
-    } else if (houseTotalNum === 21) {
-      console.log("House blackjack!");
-      setRoundEnd(true);
-    } else if (houseTotalNum > 21) {
-      console.log("House busted!");
-      setRoundEnd(true);
-    }
-  }, [playerTotalNum, houseTotalNum]);
-
   return (
-    <div className="App">
-      <div className="bg-white m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
-        h: {houseTotalNum}
-      </div>
-      <div className="bg-white m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
-        p: {playerTotalNum}
-      </div>
-      <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
-      {!roundEnd && (
-        <div className="max-w-[800px] mx-auto flex flex-wrap justify-between">
-          <button
-            onClick={onDraw}
-            className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-          >
-            Hit
-          </button>
-          <button
-            onClick={onStand}
-            className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-          >
-            Stand
-          </button>
-          <button className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl">
-            x2
-          </button>
-        </div>
-      )}
-
-      <div>POT</div>
-      {roundEnd && (
+    <div className="relative h-full min-h-screen">
+      {!gameIsOn && (
         <div>
+          <p>{gameMessage}</p>
+          <p>Your target is to hit {targetMoney}$. Good Luck!</p>
           <button
-            onClick={setTable}
-            className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+            onClick={restartGame}
+            className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
           >
-            Deal
+            START
           </button>
         </div>
       )}
-      <div>{cardsDisplay(playerCards, playerDisplayArray)}</div>
+      {gameIsOn && (
+        <div>
+          <div className="py-4"></div>
+          <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
+
+          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
+            h: {houseTotalNum}
+          </div>
+
+          <div className="flex justify-center">
+            <div>
+              {!roundEnd && (
+                <div className="flex flex-col">
+                  <button
+                    onClick={onDraw}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    Hit
+                  </button>
+                  <button
+                    onClick={onStand}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    Stand
+                  </button>
+                  <button
+                    onClick={onDouble}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    x2
+                  </button>
+                </div>
+              )}
+
+              {roundEnd && (
+                <div className="flex flex-col">
+                  <button
+                    onClick={setTable}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    Deal
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col justify-center px-4 text-2xl font-semibold">
+              {pot}
+            </div>
+
+            <div className="flex flex-col justify-center">
+              {!roundEnd && (
+                <div className="flex flex-col">
+                  {playerMoney >= smBet && (
+                    <button
+                      onClick={() => makeBet(smBet)}
+                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    >
+                      {smBet}
+                    </button>
+                  )}
+                  {playerMoney >= mdBet && (
+                    <button
+                      onClick={() => makeBet(mdBet)}
+                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    >
+                      {mdBet}
+                    </button>
+                  )}
+                  {playerMoney >= lgBet && (
+                    <button
+                      onClick={() => makeBet(lgBet)}
+                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    >
+                      {lgBet}
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {roundEnd && (
+                <div className=" text-2xl font-semibold">{winLoseMessage}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
+            p: {playerTotalNum}
+          </div>
+
+          <div>{cardsDisplay(playerCards, playerDisplayArray)}</div>
+          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[180px] text-center rounded-xl">
+            $: {playerMoney}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
