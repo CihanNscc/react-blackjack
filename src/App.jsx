@@ -235,7 +235,6 @@ function App() {
     let tempPlayerNum = playerTotalNum;
     setRoundEnd(false);
     setRevealCard(false);
-    makeBet(minBet);
     setPlayerTotalNum(0);
     setHouseTotalNum(0);
     tempHouseArray = [getRandomCard(), getRandomCard()];
@@ -302,114 +301,122 @@ function App() {
 
   return (
     <div className="relative h-full min-h-screen">
-      {!gameIsOn && (
-        <div>
-          <p>{gameMessage}</p>
-          <p>Your target is to hit {targetMoney}$. Good Luck!</p>
-          <button
-            onClick={restartGame}
-            className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
-          >
-            START
-          </button>
+      <div>
+        <div className="py-4"></div>
+        <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
+
+        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
+          h: {houseTotalNum}
         </div>
-      )}
-      {gameIsOn && (
-        <div>
-          <div className="py-4"></div>
-          <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
 
-          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
-            h: {houseTotalNum}
-          </div>
-
-          <div className="flex justify-center">
-            <div>
-              {!roundEnd && (
-                <div className="flex flex-col">
-                  <button
-                    onClick={onDraw}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                  >
-                    Hit
-                  </button>
-                  <button
-                    onClick={onStand}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                  >
-                    Stand
-                  </button>
+        <div className="flex justify-center">
+          <div>
+            {!roundEnd && (
+              <div className="flex flex-col">
+                <button
+                  onClick={onDraw}
+                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                >
+                  Hit
+                </button>
+                <button
+                  onClick={onStand}
+                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                >
+                  Stand
+                </button>
+                {playerMoney >= pot && (
                   <button
                     onClick={onDouble}
                     className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
                   >
                     x2
                   </button>
-                </div>
-              )}
+                )}
+              </div>
+            )}
 
-              {roundEnd && (
-                <div className="flex flex-col">
-                  <button
-                    onClick={setTable}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                  >
-                    Deal
-                  </button>
-                </div>
-              )}
-            </div>
-
+            {roundEnd && gameIsOn && pot >= 100 && (
+              <div className="flex flex-col">
+                <button
+                  onClick={setTable}
+                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                >
+                  Deal
+                </button>
+              </div>
+            )}
+            {roundEnd && gameIsOn && pot < 100 && (
+              <div className=" text-2xl font-semibold">{winLoseMessage}</div>
+            )}
+            {!gameIsOn && (
+              <div>
+                <p>{gameMessage}</p>
+                <p>Your target is to hit {targetMoney}$. Good Luck!</p>
+                <button
+                  onClick={restartGame}
+                  className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
+                >
+                  START
+                </button>
+              </div>
+            )}
+          </div>
+          {gameIsOn && (
             <div className="flex flex-col justify-center px-4 text-2xl font-semibold">
               {pot}
             </div>
+          )}
 
-            <div className="flex flex-col justify-center">
-              {!roundEnd && (
-                <div className="flex flex-col">
-                  {playerMoney >= smBet && (
-                    <button
-                      onClick={() => makeBet(smBet)}
-                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                    >
-                      {smBet}
-                    </button>
-                  )}
-                  {playerMoney >= mdBet && (
-                    <button
-                      onClick={() => makeBet(mdBet)}
-                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                    >
-                      {mdBet}
-                    </button>
-                  )}
-                  {playerMoney >= lgBet && (
-                    <button
-                      onClick={() => makeBet(lgBet)}
-                      className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                    >
-                      {lgBet}
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {roundEnd && (
-                <div className=" text-2xl font-semibold">{winLoseMessage}</div>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
-            p: {playerTotalNum}
-          </div>
-
-          <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
-          <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[180px] text-center rounded-xl">
-            $: {playerMoney}
+          <div className="flex flex-col justify-center">
+            {roundEnd && gameIsOn && (
+              <div className="flex flex-col">
+                {playerMoney >= smBet && (
+                  <button
+                    onClick={() => makeBet(smBet)}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    {smBet}
+                  </button>
+                )}
+                {playerMoney >= mdBet && (
+                  <button
+                    onClick={() => makeBet(mdBet)}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    {mdBet}
+                  </button>
+                )}
+                {playerMoney >= lgBet && (
+                  <button
+                    onClick={() => makeBet(lgBet)}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    {lgBet}
+                  </button>
+                )}
+                {playerMoney >= smBet && (
+                  <button
+                    onClick={() => makeBet(playerMoney)}
+                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                  >
+                    All In
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
+          p: {playerTotalNum}
+        </div>
+
+        <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
+        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[180px] text-center rounded-xl">
+          $: {playerMoney}
+        </div>
+      </div>
     </div>
   );
 }
