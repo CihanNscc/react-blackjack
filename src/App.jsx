@@ -59,6 +59,8 @@ function App() {
 
   const [roundEnd, setRoundEnd] = useState(true);
 
+  const [revealCard, setRevealCard] = useState(false);
+
   const calculateTotal = (array) => {
     let tempNum = 0;
     let totalNum = 0;
@@ -151,35 +153,28 @@ function App() {
     tempHouseNum = calculateTotal(tempHouseArray);
 
     setRoundEnd(true);
+    setRevealCard(true);
 
-    if (tempPlayerNum === 21) {
-      roundWin("Player blackjack!");
-    } else if (tempPlayerNum > 21) {
+    if (tempPlayerNum > 21) {
       roundLose("Player busted!");
-    }
-
-    if (tempPlayerNum > tempHouseNum) {
-      tempHouseArray = [...tempHouseArray, getRandomCard()];
-      setHouseCards([...tempHouseArray]);
-      tempHouseNum = calculateTotal(tempHouseArray);
-    }
-
-    if (tempPlayerNum > tempHouseNum) {
-      tempHouseArray = [...tempHouseArray, getRandomCard()];
-      setHouseCards([...tempHouseArray]);
-      tempHouseNum = calculateTotal(tempHouseArray);
-    }
-
-    if (tempHouseNum === 21) {
+    } else if (tempHouseNum === 21) {
       roundLose("House blackjack!");
-    } else if (tempHouseNum > 21) {
-      roundWin("House busted!");
-    } else if (tempPlayerNum < tempHouseNum) {
-      roundLose("House wins!");
-    } else if (tempPlayerNum === tempHouseNum) {
-      roundDraw("Draw!");
-    } else if (tempPlayerNum > tempHouseNum) {
-      roundWin("Player wins!");
+    } else {
+      while (tempHouseNum < 17) {
+        tempHouseArray = [...tempHouseArray, getRandomCard()];
+        setHouseCards([...tempHouseArray]);
+        tempHouseNum = calculateTotal(tempHouseArray);
+      }
+
+      if (tempHouseNum > 21) {
+        roundWin("House busted!");
+      } else if (tempPlayerNum < tempHouseNum) {
+        roundLose("House wins!");
+      } else if (tempPlayerNum === tempHouseNum) {
+        roundDraw("Push!");
+      } else if (tempPlayerNum > tempHouseNum) {
+        roundWin("Player wins!");
+      }
     }
   };
 
@@ -203,32 +198,28 @@ function App() {
     setPlayerTotalNum(tempPlayerNum);
     tempHouseNum = calculateTotal(tempHouseArray);
 
+    //If the dealer has a hand total of 17 or higher,
+    //they will automatically stand.
+    //If the dealer has a hand total of 16 or lower,
+    //they will take additional hit-cards.
     setRoundEnd(true);
-    if (tempPlayerNum === 21) {
-      roundWin("Player blackjack!");
-    } else if (tempPlayerNum > 21) {
+    setRevealCard(true);
+
+    if (tempPlayerNum > 21) {
       roundLose("Player busted!");
     } else {
-      if (tempPlayerNum > tempHouseNum) {
+      while (tempHouseNum < 17) {
         tempHouseArray = [...tempHouseArray, getRandomCard()];
         setHouseCards([...tempHouseArray]);
         tempHouseNum = calculateTotal(tempHouseArray);
       }
 
-      if (tempPlayerNum > tempHouseNum) {
-        tempHouseArray = [...tempHouseArray, getRandomCard()];
-        setHouseCards([...tempHouseArray]);
-        tempHouseNum = calculateTotal(tempHouseArray);
-      }
-
-      if (tempHouseNum === 21) {
-        roundLose("House blackjack!");
-      } else if (tempHouseNum > 21) {
+      if (tempHouseNum > 21) {
         roundWin("House busted!");
       } else if (tempPlayerNum < tempHouseNum) {
         roundLose("House wins!");
       } else if (tempPlayerNum === tempHouseNum) {
-        roundDraw("Draw!");
+        roundDraw("Push!");
       } else if (tempPlayerNum > tempHouseNum) {
         roundWin("Player wins!");
       }
@@ -236,11 +227,14 @@ function App() {
   };
 
   const setTable = () => {
+    setPlayerCards([]);
+    setHouseCards([]);
     let tempPlayerArray = [];
     let tempHouseArray = [];
     let tempHouseNum = houseTotalNum;
     let tempPlayerNum = playerTotalNum;
     setRoundEnd(false);
+    setRevealCard(false);
     makeBet(minBet);
     setPlayerTotalNum(0);
     setHouseTotalNum(0);
@@ -251,8 +245,10 @@ function App() {
     setPlayerCards([...tempPlayerArray]);
     tempPlayerNum = calculateTotal(tempPlayerArray);
 
-    if (tempPlayerNum === 21) {
+    if (tempPlayerNum === 21 && tempHouseNum != 21) {
       roundWin("Player blackjack!");
+    } else if (tempPlayerNum === 21 && tempHouseNum === 21) {
+      roundDraw("Push!");
     }
   };
 
@@ -265,14 +261,31 @@ function App() {
     setPlayerMoney(starterMoney);
     setWinLoseMessage("");
     setRoundEnd(true);
+    setRevealCard(false);
     setGameIsOn(true);
   };
 
-  const cardsDisplay = (sourceArray, displayArray) => {
+  const cardsDisplay = (sourceArray, displayArray, holderName) => {
     for (let i = 0; i < sourceArray.length; i++) {
-      displayArray.push(
-        <Card key={i} value={sourceArray[i][0]} suit={sourceArray[i][1]} />
-      );
+      if (i === 0 && holderName === "House") {
+        displayArray.push(
+          <Card
+            className={"cardBack"}
+            key={i}
+            value={sourceArray[i][0]}
+            suit={sourceArray[i][1]}
+          />,
+          <>
+            {!revealCard && (
+              <div className=" bg-red-900 bg-[url('/src/assets/cardtexture.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-lg z-0"></div>
+            )}
+          </>
+        );
+      } else {
+        displayArray.push(
+          <Card key={i} value={sourceArray[i][0]} suit={sourceArray[i][1]} />
+        );
+      }
     }
 
     return (
@@ -304,7 +317,7 @@ function App() {
       {gameIsOn && (
         <div>
           <div className="py-4"></div>
-          <div>{cardsDisplay(houseCards, houseDisplayArray)}</div>
+          <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
 
           <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
             h: {houseTotalNum}
@@ -391,7 +404,7 @@ function App() {
             p: {playerTotalNum}
           </div>
 
-          <div>{cardsDisplay(playerCards, playerDisplayArray)}</div>
+          <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
           <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[180px] text-center rounded-xl">
             $: {playerMoney}
           </div>
