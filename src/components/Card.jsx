@@ -45,7 +45,7 @@ const Card = (props) => {
   }
 
   return (
-    <div className="bg-white bg-[url('/src/assets/cardtexture.png')] bg-cover px-2 py-1 max-w-[110px] mr-[-30px]  rounded-lg drop-shadow-3xl">
+    <div className="bg-white bg-[url('/src/assets/cardtexture.png')] bg-cover px-2 py-1 max-w-[110px] mr-[-30px]  rounded-[15px] drop-shadow-3xl">
       <p className={`font-bold text-2xl ${cardColor}`}>{cardValue}</p>
       <p className={`m-4 ${cardColor}`}>{cardSuit}</p>
       <p className={` text-right font-bold text-2xl ${cardColor}`}>

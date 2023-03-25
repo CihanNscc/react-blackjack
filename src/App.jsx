@@ -276,7 +276,7 @@ function App() {
           />,
           <>
             {!revealCard && (
-              <div className=" bg-red-900 bg-[url('/src/assets/cardtexture.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-lg z-0"></div>
+              <div className="  bg-white border-2 border-inherit border-white bg-[url('/src/assets/card-back.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-[15px] z-0"></div>
             )}
           </>
         );
@@ -300,81 +300,70 @@ function App() {
   }, [playerCards, houseCards]);
 
   return (
-    <div className="relative h-full min-h-screen">
-      <div>
-        <div className="py-4"></div>
-        <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
+    <div className="relative h-full min-h-screen flex flex-col justify-between">
+      <div className="pt-8">
+        {cardsDisplay(houseCards, houseDisplayArray, "House")}
+      </div>
 
-        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
-          h: {houseTotalNum}
-        </div>
-
-        <div className="flex justify-center">
-          <div>
-            {!roundEnd && (
-              <div className="flex flex-col">
-                <button
-                  onClick={onDraw}
-                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                >
-                  Hit
-                </button>
-                <button
-                  onClick={onStand}
-                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                >
-                  Stand
-                </button>
-                {playerMoney >= pot && (
-                  <button
-                    onClick={onDouble}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                  >
-                    x2
-                  </button>
-                )}
-              </div>
-            )}
-
-            {roundEnd && gameIsOn && pot >= 100 && (
-              <div className="flex flex-col">
-                <button
-                  onClick={setTable}
-                  className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
-                >
-                  Deal
-                </button>
-              </div>
-            )}
-            {roundEnd && gameIsOn && pot < 100 && (
-              <div className=" text-2xl font-semibold">{winLoseMessage}</div>
-            )}
-            {!gameIsOn && (
-              <div>
-                <p>{gameMessage}</p>
-                <p>Your target is to hit {targetMoney}$. Good Luck!</p>
-                <button
-                  onClick={restartGame}
-                  className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
-                >
-                  START
-                </button>
-              </div>
-            )}
-          </div>
-          {gameIsOn && (
-            <div className="flex flex-col justify-center px-4 text-2xl font-semibold">
-              {pot}
+      <div className="flex flex-col sm:flex-row sm:w-full justify-between max-w-[600px] w-auto mx-auto">
+        <div>
+          {!roundEnd && (
+            <div className="flex flex-col">
+              <button
+                onClick={onDraw}
+                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+              >
+                Hit
+              </button>
+              <button
+                onClick={onStand}
+                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+              >
+                Stand
+              </button>
             </div>
           )}
 
-          <div className="flex flex-col justify-center">
-            {roundEnd && gameIsOn && (
+          {roundEnd && gameIsOn && pot >= 100 && (
+            <div className="flex flex-col">
+              <button
+                onClick={setTable}
+                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+              >
+                Deal
+              </button>
+            </div>
+          )}
+          {roundEnd && gameIsOn && pot < 100 && (
+            <div className=" text-2xl font-semibold">{winLoseMessage}</div>
+          )}
+          {!gameIsOn && (
+            <div>
+              <p>{gameMessage}</p>
+              <p>Your target is to hit {targetMoney}$. Good Luck!</p>
+              <button
+                onClick={restartGame}
+                className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
+              >
+                START
+              </button>
+            </div>
+          )}
+        </div>
+        {gameIsOn && (
+          <div className="flex flex-col justify-center text-2xl text-center font-semibold">
+            {pot}
+          </div>
+        )}
+
+        <div>
+          {roundEnd && gameIsOn && (
+            <div className="flex flex-row">
               <div className="flex flex-col">
                 {playerMoney >= smBet && (
                   <button
                     onClick={() => makeBet(smBet)}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
                   >
                     {smBet}
                   </button>
@@ -382,15 +371,17 @@ function App() {
                 {playerMoney >= mdBet && (
                   <button
                     onClick={() => makeBet(mdBet)}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
                   >
                     {mdBet}
                   </button>
                 )}
+              </div>
+              <div className="flex flex-col">
                 {playerMoney >= lgBet && (
                   <button
                     onClick={() => makeBet(lgBet)}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
                   >
                     {lgBet}
                   </button>
@@ -398,25 +389,33 @@ function App() {
                 {playerMoney >= smBet && (
                   <button
                     onClick={() => makeBet(playerMoney)}
-                    className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
                   >
                     All In
                   </button>
                 )}
               </div>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[80px] text-center rounded-xl">
-          p: {playerTotalNum}
-        </div>
-
-        <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
-        <div className="bg-white my-4 mx-auto font-semibold text-2xl w-[180px] text-center rounded-xl">
-          $: {playerMoney}
+            </div>
+          )}
+          {!roundEnd && playerMoney >= pot && (
+            <button
+              onClick={onDouble}
+              className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+            >
+              x2
+            </button>
+          )}
         </div>
       </div>
+      <div className="flex flex-row justify-between max-w-[600px] mx-auto w-full px-4">
+        <div className="bg-white font-semibold text-2xl w-[180px] h-[60px] text-center pt-3 rounded-xl">
+          $: {playerMoney}
+        </div>
+        <div className="bg-white font-semibold text-2xl w-[60px] h-[60px] text-center pt-3 rounded-full">
+          {playerTotalNum}
+        </div>
+      </div>
+      <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
     </div>
   );
 }
