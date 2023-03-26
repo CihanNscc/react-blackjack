@@ -32,12 +32,12 @@ function App() {
     return newCard;
   };
 
-  const minBet = 100;
-  const smBet = 100;
-  const mdBet = 200;
-  const lgBet = 500;
-  const starterMoney = 2000;
-  const targetMoney = 20000;
+  const minBet = 10;
+  const smBet = 10;
+  const mdBet = 20;
+  const lgBet = 50;
+  const starterMoney = 200;
+  const targetMoney = 2000;
 
   const [gameIsOn, setGameIsOn] = useState(false);
 
@@ -276,7 +276,7 @@ function App() {
           />,
           <>
             {!revealCard && (
-              <div className="  bg-white border-2 border-inherit border-white bg-[url('/src/assets/card-back.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-[15px] z-0"></div>
+              <div className="  bg-white border-2 border-inherit border-white bg-[url('/src/assets/card-back.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-[10px] z-0"></div>
             )}
           </>
         );
@@ -324,7 +324,7 @@ function App() {
             </div>
           )}
 
-          {roundEnd && gameIsOn && pot >= 100 && (
+          {roundEnd && gameIsOn && pot >= minBet && (
             <div className="flex flex-col">
               <button
                 onClick={setTable}
@@ -334,7 +334,7 @@ function App() {
               </button>
             </div>
           )}
-          {roundEnd && gameIsOn && pot < 100 && (
+          {roundEnd && gameIsOn && pot < minBet && (
             <div className=" text-2xl font-semibold">{winLoseMessage}</div>
           )}
           {!gameIsOn && (
@@ -361,38 +361,50 @@ function App() {
             <div className="flex flex-row">
               <div className="flex flex-col">
                 {playerMoney >= smBet && (
-                  <button
+                  <div
                     onClick={() => makeBet(smBet)}
-                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="w-[80px] h-[80px] rounded-full bg-[url('/src/assets/chip.png')] bg-red-800 drop-shadow-4xl text-3xl text-white font-RobotoSlab pt-5 pl-6"
                   >
                     {smBet}
-                  </button>
+                  </div>
                 )}
                 {playerMoney >= mdBet && (
-                  <button
+                  <div
                     onClick={() => makeBet(mdBet)}
-                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
                   >
-                    {mdBet}
-                  </button>
+                    <div className="bg-[url('/src/assets/chiptexture.png')] w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
+                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-2xl text-center text-white pt-[6px]">
+                        {mdBet}
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
               <div className="flex flex-col">
                 {playerMoney >= lgBet && (
-                  <button
+                  <div
                     onClick={() => makeBet(lgBet)}
-                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
                   >
-                    {lgBet}
-                  </button>
+                    <div className="bg-red-700 w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
+                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-2xl text-center text-white pt-[6px]">
+                        {lgBet}
+                      </div>
+                    </div>
+                  </div>
                 )}
                 {playerMoney >= smBet && (
-                  <button
+                  <div
                     onClick={() => makeBet(playerMoney)}
-                    className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
+                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
                   >
-                    All In
-                  </button>
+                    <div className="bg-red-700 w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
+                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-lg text-center text-white pt-[10px]">
+                        All In
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

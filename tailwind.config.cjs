@@ -6,8 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'LibreBaskerville': ['Libre Baskerville', 'serif'],
+        'RobotoSlab': ['Roboto Slab', 'serif']
+      },
       dropShadow: {
-        '3xl': '0px 10px 10px rgba(0, 0, 0, 0.50)'
+        '3xl': '0px 10px 10px rgba(0, 0, 0, 0.50)',
+        '4xl': '0px 3px 3px rgba(0, 0, 0, 0.60)'
       }
     },
   },
