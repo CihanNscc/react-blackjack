@@ -8,7 +8,8 @@ module.exports = {
     extend: {
       fontFamily: {
         'LibreBaskerville': ['Libre Baskerville', 'serif'],
-        'RobotoSlab': ['Roboto Slab', 'serif']
+        'RobotoSlab': ['Roboto Slab', 'serif'],
+        'Quicksand': ['Quicksand', 'sans-serif']
       },
       dropShadow: {
         '3xl': '0px 10px 10px rgba(0, 0, 0, 0.50)',

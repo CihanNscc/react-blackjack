@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
-  background-image: url('/src/assets/tabletexture.png'),linear-gradient(40deg, #0C7034, #127A3C);
+  background-image: url('/src/assets/tabletexture.png'),radial-gradient(#0C7034, #063d1c);
   background-repeat: repeat;
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */

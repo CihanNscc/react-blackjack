@@ -102,6 +102,7 @@ function App() {
     let tempPot = pot;
     let tempPlayerMoney = playerMoney;
     setRoundEnd(true);
+    setRevealCard(true);
     setWinLoseMessage(message);
     setPlayerMoney((tempPlayerMoney += tempPot * 2));
     setPot(0);
@@ -113,10 +114,11 @@ function App() {
 
   const roundLose = (message) => {
     setRoundEnd(true);
+    setRevealCard(true);
     setWinLoseMessage(message);
     setPot(0);
     if (playerMoney < minBet) {
-      setgameMessage("Sorry! You lost.");
+      setgameMessage("You hit zero. Game is over.");
       setGameIsOn(false);
     }
   };
@@ -125,6 +127,7 @@ function App() {
     let tempPot = pot;
     let tempPlayerMoney = playerMoney;
     setRoundEnd(true);
+    setRevealCard(true);
     setWinLoseMessage(message);
     setPlayerMoney((tempPlayerMoney += tempPot));
     setPot(0);
@@ -288,7 +291,7 @@ function App() {
     }
 
     return (
-      <span className="flex justify-left min-h-[180px] max-w-[500px] overflow-auto pl-4 pb-6 pr-[60px] mb-4 mx-auto">
+      <span className="flex justify-left min-h-[160px] max-w-[500px] overflow-auto pl-4 pb-2 pr-[60px] my-6 mx-auto">
         {displayArray}
       </span>
     );
@@ -301,133 +304,147 @@ function App() {
 
   return (
     <div className="relative h-full min-h-screen flex flex-col justify-between">
-      <div className="pt-8">
-        {cardsDisplay(houseCards, houseDisplayArray, "House")}
-      </div>
+      <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
 
-      <div className="flex flex-col sm:flex-row sm:w-full justify-between max-w-[600px] w-auto mx-auto">
-        <div>
-          {!roundEnd && (
-            <div className="flex flex-col">
-              <button
-                onClick={onDraw}
-                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
-              >
-                Hit
-              </button>
-              <button
-                onClick={onStand}
-                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
-              >
-                Stand
-              </button>
-            </div>
-          )}
-
-          {roundEnd && gameIsOn && pot >= minBet && (
-            <div className="flex flex-col">
-              <button
-                onClick={setTable}
-                className="bg-gray-400 m-2 font-semibold text-2xl w-[80px] text-center rounded-xl"
-              >
-                Deal
-              </button>
-            </div>
-          )}
-          {roundEnd && gameIsOn && pot < minBet && (
-            <div className=" text-2xl font-semibold">{winLoseMessage}</div>
-          )}
-          {!gameIsOn && (
-            <div>
-              <p>{gameMessage}</p>
-              <p>Your target is to hit {targetMoney}$. Good Luck!</p>
-              <button
-                onClick={restartGame}
-                className="bg-white my-4 mx-auto font-semibold text-2xl w-[120px] text-center rounded-xl"
-              >
-                START
-              </button>
-            </div>
-          )}
-        </div>
-        {gameIsOn && (
-          <div className="flex flex-col justify-center text-2xl text-center font-semibold">
-            {pot}
-          </div>
-        )}
-
-        <div>
-          {roundEnd && gameIsOn && (
-            <div className="flex flex-row">
-              <div className="flex flex-col">
-                {playerMoney >= smBet && (
-                  <div
-                    onClick={() => makeBet(smBet)}
-                    className="w-[80px] h-[80px] rounded-full bg-[url('/src/assets/chip.png')] bg-red-800 drop-shadow-4xl text-3xl text-white font-RobotoSlab pt-5 pl-6"
-                  >
-                    {smBet}
-                  </div>
-                )}
-                {playerMoney >= mdBet && (
-                  <div
-                    onClick={() => makeBet(mdBet)}
-                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
-                  >
-                    <div className="bg-[url('/src/assets/chiptexture.png')] w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
-                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-2xl text-center text-white pt-[6px]">
-                        {mdBet}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col">
-                {playerMoney >= lgBet && (
-                  <div
-                    onClick={() => makeBet(lgBet)}
-                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
-                  >
-                    <div className="bg-red-700 w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
-                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-2xl text-center text-white pt-[6px]">
-                        {lgBet}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {playerMoney >= smBet && (
-                  <div
-                    onClick={() => makeBet(playerMoney)}
-                    className="bg-red-900 w-[84px] h-[84px] m-2 rounded-full drop-shadow-3xl"
-                  >
-                    <div className="bg-red-700 w-[80px] h-[80px] mb-1 border-dashed border-white border-8 rounded-full">
-                      <div className="w-[56px] h-[56px] rounded-full m-1 border-dashed border-white border-2 font-bold text-lg text-center text-white pt-[10px]">
-                        All In
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+      <div className="flex flex-col sm:flex-row sm:w-full justify-between max-w-[600px] w-auto mx-auto my-4">
+        <div className="flex flex-col w-[180px] min-h-[100px]">
           {!roundEnd && playerMoney >= pot && (
             <button
               onClick={onDouble}
-              className="bg-gray-400 m-4 font-semibold text-2xl w-[80px] text-center rounded-xl"
+              className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] w-[80px] my-2 mx-auto py-2 text-2xl text-center text-[#dbd1c8] font-semibold rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md"
             >
               x2
             </button>
           )}
+          {roundEnd && gameIsOn && pot >= minBet && (
+            <button
+              onClick={setTable}
+              className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D]  mx-auto my-2 px-6 py-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md"
+            >
+              Deal
+            </button>
+          )}
+          {roundEnd && gameIsOn && pot < minBet && (
+            <>
+              {houseTotalNum != 0 && (
+                <div className="text-white text-2xl text-center [text-shadow:_2px_2px_2px_rgb(0_0_0_/_60%)]">
+                  House has {houseTotalNum}
+                </div>
+              )}
+              <div className="text-white text-2xl text-center font-semibold [text-shadow:_2px_2px_2px_rgb(0_0_0_/_60%)]">
+                {winLoseMessage}
+              </div>
+            </>
+          )}
+          {!gameIsOn && (
+            <div className="p-4 text-white text-2xl text-center [text-shadow:_2px_2px_2px_rgb(0_0_0_/_60%)]">
+              <p className="text-2xl font-semibold">{gameMessage}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col w-[180px] h-[100px]">
+          {gameIsOn && (
+            <>
+              <div className="w-[180px] mt-4 bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center font-RobotoSlab border-2 border-gray-800 rounded-md">
+                <span className="text-gray-400">$ </span>
+                {pot}
+              </div>
+              <div className=" opacity-50 font-semibold text-center mb-4">
+                Minimum Bet $10
+              </div>
+            </>
+          )}
+          {!gameIsOn && (
+            <button
+              onClick={restartGame}
+              className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] m-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md h-[50px] w-[75px] mx-auto"
+            >
+              START
+            </button>
+          )}
+        </div>
+
+        <div>
+          <div className="flex flex-row h-[180px] w-[180px]">
+            {!gameIsOn && (
+              <div className="p-4 text-white text-2xl text-center [text-shadow:_2px_2px_2px_rgb(0_0_0_/_60%)]">
+                <p className="text-2xl">
+                  Your target is to hit ${targetMoney}. Good Luck!
+                </p>
+              </div>
+            )}
+            {!roundEnd && (
+              <>
+                <button
+                  onClick={onDraw}
+                  className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] m-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md h-[50px] w-[75px]"
+                >
+                  Hit
+                </button>
+                <button
+                  onClick={onStand}
+                  className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] m-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md h-[50px] w-[75px]"
+                >
+                  Stand
+                </button>
+              </>
+            )}
+            {roundEnd && gameIsOn && (
+              <>
+                <div className="flex flex-col">
+                  {playerMoney >= smBet && (
+                    <div
+                      onClick={() => makeBet(smBet)}
+                      className="w-[80px] h-[80px] m-1 rounded-full bg-[url('/src/assets/chip.png')] bg-blue-900 drop-shadow-4xl text-3xl text-white font-RobotoSlab pt-5 pl-[26px] hover:cursor-pointer"
+                    >
+                      {smBet}
+                    </div>
+                  )}
+                  {playerMoney >= mdBet && (
+                    <div
+                      onClick={() => makeBet(mdBet)}
+                      className="w-[80px] h-[80px] m-1 rounded-full bg-[url('/src/assets/chip.png')] bg-purple-900 drop-shadow-4xl text-3xl text-white font-RobotoSlab pt-[21px] pl-6 hover:cursor-pointer"
+                    >
+                      {mdBet}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  {playerMoney >= lgBet && (
+                    <div
+                      onClick={() => makeBet(lgBet)}
+                      className="w-[80px] h-[80px] m-1 rounded-full bg-[url('/src/assets/chip.png')] bg-red-800 drop-shadow-4xl text-3xl text-white font-RobotoSlab pt-[22px] pl-[25px] hover:cursor-pointer"
+                    >
+                      {lgBet}
+                    </div>
+                  )}
+                  {playerMoney >= smBet && (
+                    <div
+                      onClick={() => makeBet(playerMoney)}
+                      className="w-[80px] h-[80px] m-1 rounded-full bg-[url('/src/assets/chip.png')] bg-gray-800 drop-shadow-4xl text-md text-white font-RobotoSlab pt-[27px] pl-5 hover:cursor-pointer"
+                    >
+                      All In
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className="flex flex-row justify-between max-w-[600px] mx-auto w-full px-4">
-        <div className="bg-white font-semibold text-2xl w-[180px] h-[60px] text-center pt-3 rounded-xl">
-          $: {playerMoney}
+      <div className="flex flex-col justify-between max-w-[600px] mx-auto w-full px-4">
+        <div className="flex flex-row justify-between">
+          <div className="min-w-[140px] py-1 bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center font-RobotoSlab border-2 border-gray-800 rounded-md">
+            <span className="text-gray-400">$ </span>
+            {playerMoney}
+          </div>
+          <div className="w-[50px] h-[50px] pt-[6px] bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center border-2 border-gray-800 rounded-full">
+            {playerTotalNum}
+          </div>
         </div>
-        <div className="bg-white font-semibold text-2xl w-[60px] h-[60px] text-center pt-3 rounded-full">
-          {playerTotalNum}
-        </div>
+        <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
       </div>
-      <div>{cardsDisplay(playerCards, playerDisplayArray, "Player")}</div>
     </div>
   );
 }
