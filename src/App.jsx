@@ -279,7 +279,7 @@ function App() {
           />,
           <>
             {!revealCard && (
-              <div className="  bg-white border-2 border-inherit border-white bg-[url('/src/assets/card-back.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-[10px] z-0"></div>
+              <div className="  bg-white bg-[url('/src/assets/card-back.png')] bg-cover w-[100px] ml-[-68px] mr-[-30px] rounded-[10px] z-0"></div>
             )}
           </>
         );
@@ -358,7 +358,7 @@ function App() {
           {!gameIsOn && (
             <button
               onClick={restartGame}
-              className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] m-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md h-[50px] w-[75px] mx-auto"
+              className="bg-gradient-to-tr hover:bg-gradient-to-bl from-[#3D2209] to-[#4F2D0D] m-2 text-2xl text-center text-[#dbd1c8] rounded-md border-2 border-[#3D2209] drop-shadow-4xl active:drop-shadow-md h-[50px] w-[90px] mx-auto"
             >
               START
             </button>
@@ -439,7 +439,7 @@ function App() {
             <span className="text-gray-400">$ </span>
             {playerMoney}
           </div>
-          <div className="w-[50px] h-[50px] pt-[6px] bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center border-2 border-gray-800 rounded-full">
+          <div className="w-[50px] h-[50px] pt-[6px] bg-gradient-to-tr from-slate-50 to-slate-300 text-slate-700 font-semibold text-2xl text-center border-2 border-slate-300 rounded-full">
             {playerTotalNum}
           </div>
         </div>
