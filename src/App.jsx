@@ -201,10 +201,6 @@ function App() {
     setPlayerTotalNum(tempPlayerNum);
     tempHouseNum = calculateTotal(tempHouseArray);
 
-    //If the dealer has a hand total of 17 or higher,
-    //they will automatically stand.
-    //If the dealer has a hand total of 16 or lower,
-    //they will take additional hit-cards.
     setRoundEnd(true);
     setRevealCard(true);
 
