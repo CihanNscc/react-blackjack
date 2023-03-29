@@ -287,7 +287,7 @@ function App() {
     }
 
     return (
-      <span className="flex justify-left min-h-[160px] max-w-[500px] overflow-auto pl-4 pb-2 pr-[60px] my-6 mx-auto">
+      <span className="flex justify-left min-h-[160px] max-w-[500px] overflow-auto pl-4 pb-2 pr-[60px] my-2 sm:my-6 mx-auto">
         {displayArray}
       </span>
     );
@@ -302,8 +302,8 @@ function App() {
     <div className="relative h-full min-h-screen flex flex-col justify-between">
       <div>{cardsDisplay(houseCards, houseDisplayArray, "House")}</div>
 
-      <div className="flex flex-col sm:flex-row sm:w-full justify-between max-w-[600px] w-auto mx-auto my-4">
-        <div className="flex flex-col w-[180px] min-h-[100px]">
+      <div className="flex flex-col sm:flex-row justify-between max-w-[600px] mx-auto sm:my-4">
+        <div className="flex flex-col sm:w-[180px] w-full sm:min-h-[100px]">
           {!roundEnd && playerMoney >= pot && (
             <button
               onClick={onDouble}
@@ -339,10 +339,10 @@ function App() {
           )}
         </div>
 
-        <div className="flex flex-col w-[180px] h-[100px]">
+        <div className="flex flex-col sm:w-[180px] w-full sm:h-[100px] sm:mx-8">
           {gameIsOn && (
             <>
-              <div className="w-[180px] mt-4 bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center font-RobotoSlab border-2 border-gray-800 rounded-md">
+              <div className="w-[180px] mx-auto mt-4 bg-gradient-to-tr from-gray-900 to-gray-700 text-white text-2xl text-center font-RobotoSlab border-2 border-gray-800 rounded-md">
                 <span className="text-gray-400">$ </span>
                 {pot}
               </div>
@@ -362,7 +362,7 @@ function App() {
         </div>
 
         <div>
-          <div className="flex flex-row h-[180px] w-[180px]">
+          <div className="flex flex-row sm:h-[180px] sm:w-[180px] w-full">
             {!gameIsOn && (
               <div className="p-4 text-white text-2xl text-center [text-shadow:_2px_2px_2px_rgb(0_0_0_/_60%)]">
                 <p className="text-2xl">
@@ -388,7 +388,7 @@ function App() {
             )}
             {roundEnd && gameIsOn && (
               <>
-                <div className="flex flex-col">
+                <div className="flex sm:flex-col flex-row">
                   {playerMoney >= smBet && (
                     <div
                       onClick={() => makeBet(smBet)}
@@ -406,7 +406,7 @@ function App() {
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col">
+                <div className="flex sm:flex-col flex-row">
                   {playerMoney >= lgBet && (
                     <div
                       onClick={() => makeBet(lgBet)}
